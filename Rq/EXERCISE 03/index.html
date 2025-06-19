@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXERCISE 03</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <div class="card">
+        <form>
+            <label for="firstnumber">First number:</label>
+            <input type="number" name="firstnumber" id="firstnumber" placeholder="First Number">
+            <label for="lastnumber">Last number:</label>
+            <input type="number" name="lastnumber" id="lastnumber" placeholder="Last Number">
+            <button onclick="calculate('-')">Subtraction operation (-)</button>
+            <button onclick="calculate('/')">Dividing operation (/)</button>
+            <button onclick="calculate()">Average operation</button>
+        </form>
+        <div class="result">
+            <h1>Result: 00</h1>
+        </div>
+    </div>
+</body>
+</html>
