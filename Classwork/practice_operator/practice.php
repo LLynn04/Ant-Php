@@ -36,9 +36,8 @@ echo $num . (($num % 2 == 0) ? " is even" : " is odd");
 echo "<br/><br/><br/>";
 
 // for loop
-
 $numFor = 10;
 
-for ( $numFor ; $numFor >= 0 ; $numFor--) {
+for ( $numFor ; $numFor >= 1 ; $numFor--) {
     echo $numFor . "<br />";
 }
