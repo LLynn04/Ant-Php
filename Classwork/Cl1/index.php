@@ -1,14 +1,22 @@
+
 <?php
 
 $a = 3;
-$b = "3";
+$b = "4";
 
 if ($a === $b) {
-    echo "1 is not equal but data is the same to 2";
+    echo "same type, and value: " . $a . $b;
 } elseif ($a == $b) {
-    echo "1 is not equal 1";
+    echo "same value: " . $a . $b;
 } elseif ($a != $b) {
-    echo "equal but not the same vlaue";
+    echo "differ type, but same value: " . $a . $b;
 } elseif ($a !== $b) {
-    echo "1 is not equal 2";
+    echo "type and value differ: " . $a . $b;
+}
+
+$num = [1,2,3,4,5];
+$i = 0;
+while($i < count($num)) {
+    echo $num[$i];
+    $i++;
 }

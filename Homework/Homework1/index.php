@@ -6,6 +6,24 @@ $email = "johnjammi@gmail.com";
 $gender = "Male";
 $description = "Technology refers to the practical application of scientific knowledge to create tools, systems, and processes that solve problems, enhance human capabilities, and streamline complex tasks. It is a driving force behind innovation and societal transformation.";
 $image = ["./image/image1.jpg", "./image/image2.jpg", "./image/image3.jpg"];
+
+$dob = new DateTime('2004-10-10');
+$today   = new DateTime('today');
+$year = $dob->diff($today)->y;
+$month = $dob->diff($today)->m;
+$day = $dob->diff($today)->d;
+// echo "Age is" . " " . $year . "year" . " ", $month . "months" . " " . $day . "days";
+
+$ageStatus = '';
+if ( $year >= 18) {
+  $ageStatus = "Adult";
+} else if ( $year < 18) {
+    $ageStatus = "teen";
+} else if ($year < 13){
+    $ageStatus = "kid";
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +73,7 @@ $image = ["./image/image1.jpg", "./image/image2.jpg", "./image/image3.jpg"];
             margin: 0 0 8px 0;
             font-size: 2em;
             color: #222;
-            
+
         }
 
         .cv-header-info p {
@@ -107,11 +125,13 @@ $image = ["./image/image1.jpg", "./image/image2.jpg", "./image/image3.jpg"];
                 <h1><?php echo $firstName . ' ' . $lastName; ?></h1>
                 <p><strong>Email: </strong> <?php echo $email; ?></p>
                 <p><strong>Gender: </strong> <?php echo $gender; ?></p>
+                <p><strong>Age: </strong>
+                    <?php echo $year . " year" . ", " . $ageStatus ?>
+                </p>
             </div>
         </div>
         <div class="cv-body">
             <div class="cv-description">
-                <!-- Displays the description if available; otherwise, shows a fallback message  -->
                 <?php echo $description ? $description : '<em>No description provided.</em>'; ?>
             </div>
         </div>
