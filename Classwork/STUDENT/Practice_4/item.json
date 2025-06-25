@@ -1,5 +1,10 @@
 [
     {
+        "product_name": "frog",
+        "price": "44",
+        "stock_quantity": "10"
+    },
+    {
         "product_name": "peach",
         "price": "100",
         "stock_quantity": "34"
