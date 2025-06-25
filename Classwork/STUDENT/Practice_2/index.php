@@ -5,7 +5,6 @@ $items = [
     ["product" => "Eggs", "price" => 3.0, "quantity" => 1,],
     ["product" => "Cheese", "price" => 5.0, "quantity" => 3,]
 ];
-$total = 0;
 
 $totalPrice = 0;
 foreach ($items as $item) {
@@ -78,7 +77,7 @@ $totalAmount = $totalPrice;
                         <?php foreach ($items as $item) {
                             $itemTotal = $item['price'] * $item['quantity'];
                             echo "<tr>";
-                            echo "<td>{$item['product:']}</td>";
+                            echo "<td>{$item['product']}</td>";
                             echo "<td>{$item['quantity']}</td>";
                             echo "<td>\${$item['price']}</td>";
                             echo "<td>\$" . $itemTotal . "</td>";

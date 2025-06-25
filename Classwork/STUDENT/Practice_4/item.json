@@ -1,0 +1,17 @@
+[
+    {
+        "product_name": "peach",
+        "price": "100",
+        "stock_quantity": "34"
+    },
+    {
+        "product_name": "peach",
+        "price": "100",
+        "stock_quantity": "34"
+    },
+    {
+        "product_name": "banana",
+        "price": "33",
+        "stock_quantity": "0"
+    }
+]
