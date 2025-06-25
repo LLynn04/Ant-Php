@@ -1,9 +1,9 @@
 <?php
 $items = [
-    ["product:" => "Milk", "price" => 1.5, "quantity" => 2],
-    ["product:" => "Bread", "price" => 2.0, "quantity" => 1],
-    ["product:" => "Eggs", "price" => 3.0, "quantity" => 1,],
-    ["product:" => "Cheese", "price" => 5.0, "quantity" => 3,]
+    ["product" => "Milk", "price" => 1.5, "quantity" => 2],
+    ["product" => "Bread", "price" => 2.0, "quantity" => 1],
+    ["product" => "Eggs", "price" => 3.0, "quantity" => 1,],
+    ["product" => "Cheese", "price" => 5.0, "quantity" => 3,]
 ];
 $total = 0;
 
