@@ -12,8 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     array_unshift($item, $newProduct);
     file_put_contents('item.json', json_encode($item, JSON_PRETTY_PRINT));
 }
-function totalPrice($item)
-{
+function totalPrice($item) {
     $total = 0;
     foreach ($item as $product) {
         $total += (float)$product['price'];
