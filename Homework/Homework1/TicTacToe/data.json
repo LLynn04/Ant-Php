@@ -1,1 +1,1 @@
-{"board":["","","","","","","","",""],"currentPlayer":"X","message":"","winnerLine":[]}
+{"board":["","X","","O","X","O","","X",""],"currentPlayer":"X","message":"player X wins","winnerLine":[1,4,7]}
