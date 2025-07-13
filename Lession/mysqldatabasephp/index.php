@@ -13,9 +13,10 @@ include 'data.php';
 
 // $sql = "DELETE FROM `users` WHERE `username` = 'John jame'";
 
-$sql = "UPDATE `users` SET `username` = 'Katty Perry', `email` = 'jame@gmail.com', `password` = '1234445' WHERE `id` = '2'";
+// $sql = "UPDATE `users` SET `username` = 'Katty Perry', `email` = 'jame@gmail.com', `password` = '1234445' WHERE `id` = '2'";
 
-mysqli_query($db, $sql);
+// mysqli_query($db, $sql);
+$db->query("INSERT INTO users (username, email, password)
+ VALUES ('John Doe', 'daling@gmail,com', '123456')");
 
-mysqli_close($db);
 ?>
