@@ -1,0 +1,6 @@
+USE mysql1;
+
+
+SHOW TABLES;
+SHOW COLUMNS FROM users;
+SELECT * FROM users;
