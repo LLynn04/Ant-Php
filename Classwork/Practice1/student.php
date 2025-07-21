@@ -6,29 +6,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $grade = $_POST['grade'];
 
-    if ($name != '' && is_numeric($grade) && $grade > 0 && $grade < 100) {
-        $newStudent = [
+   if (!empty($name) && is_numeric($grade) && $grade > 0 && $grade < 100) {
+        
+        $file = 'data.json';
+        $jsonData = file_exists($file)? file_get_contents($file): [];
+
+        $data = json_decode($jsonData, true);
+        $dataStudent = [
             'name' => $name,
             'grade' => $grade,
         ];
-        $file = 'data.json';
+        
+        $data[] = $dataStudent;
+        $newJsondata = json_encode($data, JSON_PRETTY_PRINT);
+        file_put_contents($file, $newJsondata);
 
-        if (file_exists($file)) {
-            $jsonData = file_get_contents($file);
-            $dataArray = json_decode($jsonData, true);
-        } else {
-            $dataArray = [];
-        }
-
-        $dataArray[] = $newStudent;
-
-        file_put_contents($file, json_encode($dataArray, JSON_PRETTY_PRINT));
-
-        echo 'data send succesed';
+        echo "successed";
     } else {
-        echo 'you requst required';
+        echo "failed";
     }
+    exit;
 }
+
+header('Content-Type: application/json');
+
+$file = 'data.json';
+$jsonData = file_exists($file) ? file_get_contents($file) : '[]';
+$data = json_decode($jsonData, true);
+
+$minGrade = isset($_GET['min_grade']) ? (int)$_GET['min_grade'] : 0;
+$filtered = array_filter($data, function($student) use ($minGrade) {
+    return $student['grade'] >= $minGrade;
+});
+
+echo json_encode(array_values($filtered), JSON_PRETTY_PRINT);
+
 ?>
 
 <!DOCTYPE html>
