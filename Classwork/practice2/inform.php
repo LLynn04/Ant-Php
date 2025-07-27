@@ -3,39 +3,43 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 include 'action.php';
-$errorMessage = '';
 $successMessage = '';
-$editeMode = false;
-$editeName = '';
-$editeEmail = '';
-$editePassword = '';
+$errorMessage = '';
+$isEdit = false;
 
+// fetch all show user 
+$sql = 'SELECT * FROM users';
+$stmt = $connect->prepare($sql);
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// delete row by id
 if (isset($_GET['delete_id'])) {
     $deleteID = $_GET['delete_id'];
 
-    $sql = 'DELETE FROM users WHERE id = :id';
-    $statement = $connect->prepare($sql);
-    $statement->bindParam(':id', $deleteID, PDO::PARAM_INT);
-
-    if ($statement->execute()) {
-        $successMessage = "User deleted successfully.";
-    } else {
-        $errorMessage = "Failed to delete user.";
-    }
+    $sql = 'DELETE FROM users Where id = :id';
+    $stmt = $connect->prepare($sql);
+    $stmt->execute([
+        'id' => $deleteID
+    ]);
+    $successMessage = 'delete successfuly';
 }
 
+// check database
 if (isset($_GET['edit_id'])) {
-    $editMode = true;
-    $editId = $_GET['edit_id'];
+    $editID = $_GET['edit_id'];
 
-    $sql = "SELECT * FROM users WHERE id = :id";
-    $statement = $connect->prepare($sql);
-    $statement->bindParam(':id', $editId, PDO::PARAM_INT);
-    $statement->execute();
-    $user = $statement->fetch(PDO::FETCH_ASSOC);
+    $sql = 'SELECT * FROM users Where id = :id';
+    $stmt = $connect->prepare($sql);
+    $stmt->execute([
+        'id' => $editID
+    ]);
+    $editUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user) {
-        $errorMessage = "User not found.";
+    if ($editUser) {
+        $isEdit = true;
+    } else {
+        $errorMessage = 'user not found';
     }
 }
 
@@ -44,57 +48,54 @@ $email = isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '';
 $password = isset($_POST['password']) ? htmlspecialchars($_POST['password']) : '';
 $confirm_password = isset($_POST['confirm_password']) ? htmlspecialchars($_POST['confirm_password']) : '';
 
-if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
-    $errorMessage =  'file required';
-} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $errorMessage = 'invalid Email';
-} elseif ($password != $confirm_password) {
-    $errorMessage = 'password must same as confirm_password';
-} elseif (isset($_GET['edit_id'])) {
-    try {
-        $editId = $_GET['edit_id'];
 
-        $sql = "UPDATE users SET name=:name, email=:email, password=:password Where id= :id";
-        $statement = $connect->prepare($sql);
-        $data = [
-            ':name' => $name,
-            ':email' => $email,
-            ':password' => password_hash($password, PASSWORD_DEFAULT),
-            ':id' => $editId
-        ];
+if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errorMessage = 'invalid email';
+} else if ($isEdit && isset($_POST['edit_id'])) {
+    if (empty($name) && empty($email)) {
+        $errorMessage = 'feild required';
+    } else {
+        try {
+            $sql = 'UPDATE users SET name = :name, email = :email Where id = :id';
+            $stmt = $connect->prepare($sql);
+            $stmt->execute([
+                'name' => $name,
+                'email' => $email,
+                'id' => $_POST['edit_id'],
+            ]);
 
 
-        $users = $statement->execute($data);
-        if ($users) {
-            $successMessage = 'update success';
-        } else {
-            $errorMessage = 'failed';
+            $successMessage = 'Updated successfully';
+            header("Location: " . $_SERVER['PHP_SELF']);
+        } catch (PDOException $e) {
+            echo 'error' . $e->getMessage();
         }
-    } catch (PDOException $e) {
-        echo $e->getMessage();
     }
 } else {
-    try {
-        $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-        $statement = $connect->prepare("INSERT INTO users (name,email,password) VALUES (:name , :email , :password );");
-        $users = $statement->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':password' => $hashPassword
-        ]);
-        $successMessage = 'signup success';
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-    }
-}
+    // crtate
+    if (empty($name) || empty($email) || empty($password) || empty($confirm_password)) {
+        $errorMessage = 'filed requird';
+    } else if ($password != $password) {
+        $errorMessage = 'password must be same';
+    } else {
+        try {
+            $hoshPassword = password_hash($password, PASSWORD_DEFAULT);
 
-try {
-    $sql = "SELECT id, name, email, password from users";
-    $statement = $connect->prepare($sql);
-    $users = $statement->execute();
-    $users = $statement->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo 'failed' . $e->getMessage();
+            $sql = 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password);';
+            $stmt = $connect->prepare($sql);
+            $stmt->execute([
+                'name' => $name,
+                'email' => $email,
+                'password' => $hoshPassword,
+            ]);
+
+            $successMessage = 'created successfuly';
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } catch (PDOException $e) {
+            echo 'error' . $e->getMessage();
+        }
+    }
 }
 
 ?>
@@ -187,20 +188,25 @@ try {
     <?php endif; ?>
 
     <form method="POST" action="">
+        <?php if ($isEdit && isset($editUser)): ?>
+            <input type="hidden" name="edit_id" value="<?= $editUser['id'] ?>" />
+        <?php endif; ?>
+
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" />
+        <input type="text" id="name" name="name" value="<?= $isEdit ? htmlspecialchars($editUser['name']) : '' ?>" />
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>"/>
+        <input type="email" id="email" name="email" value="<?= $isEdit ? htmlspecialchars($editUser['email']) : '' ?>" />
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" value="<?= htmlspecialchars($user['password']) ?>"/>
+        <input type="password" id="password" name="password" />
 
         <label for="confirm_password">Confirm Password:</label>
         <input type="password" id="confirm_password" name="confirm_password" />
 
-        <input type="submit" value="<?= $editMode ? 'Update' : 'Register' ?>" />
+        <input type="submit" value="<?= $isEdit ? 'Update' : 'Register' ?>" />
     </form>
+
 
     <h2>All Users</h2>
 
